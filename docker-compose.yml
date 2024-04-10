@@ -37,6 +37,16 @@ services:
       - ./config.json:/config/config.json
       - ./downloads:/downloads
 
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.30.3
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - '--storage.tsdb.retention.time=10d'
+
   loki:
     container_name: loki
     image: grafana/loki:2.4.1
@@ -70,9 +80,10 @@ services:
       - GF_USERS_DEFAULT_THEME=dark
       - GF_DISABLE_SIGNOUT_MENU=true
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
     ports:
       - 3000:3000
 
 volumes:
   loki-data:
+  prometheus-data:

@@ -5,12 +5,11 @@
     "password": "everyone",
     "protocol": "websockets",
     "topics": {
-        "cache/a/wis2/+/data/core/weather/#" : "$TOPIC"
     },
     "download_dir": "downloads",
-    "flask_host": "127.0.0.1",
+    "flask_host": "wis2-downloader",
     "flask_port": 8080,
-    "download_workers": 10,
+    "download_workers": 100,
     "save_logs": false,
     "log_dir": "logs"
 }

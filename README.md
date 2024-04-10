@@ -23,5 +23,5 @@ Edit the config.json to set topics and select your broker.
 Run the following command to start the stack:
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
