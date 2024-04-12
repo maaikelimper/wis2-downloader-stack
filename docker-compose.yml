@@ -24,6 +24,8 @@ services:
     image: nginx:alpine
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt/live/downloader-demo.wis2dev.io/privkey.pem:/etc/nginx/certs/wis2-downloader.key:ro
+      - /etc/letsencrypt/live/downloader-demo.wis2dev.io/fullchain.pem:/etc/nginx/certs/wis2-downloader.crt:ro
 
   wis2-downloader:
     <<: *logging
@@ -35,14 +37,13 @@ services:
     restart: always
     volumes:
       - ./config.json:/config/config.json
-      - ./downloads:/downloads
+      - ./downloads:/app/downloads:rw
 
   prometheus:
     container_name: prometheus
     image: prom/prometheus:v2.30.3
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - '--storage.tsdb.retention.time=10d'
@@ -86,4 +87,3 @@ services:
 
 volumes:
   loki-data:
-  prometheus-data:

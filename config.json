@@ -6,7 +6,7 @@
     "protocol": "websockets",
     "topics": {
     },
-    "download_dir": "downloads",
+    "download_dir": "/app/downloads",
     "flask_host": "wis2-downloader",
     "flask_port": 8080,
     "download_workers": 100,

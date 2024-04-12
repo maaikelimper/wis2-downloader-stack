@@ -3,6 +3,9 @@ FROM python:3.9-slim
 
 EXPOSE 8080
 
+# define env variable for DOWNLOAD_DIR
+ENV DOWNLOAD_DIR /app/downloads
+
 # update pyopenssl and pin requests and urllib3 to avoid SSL error
 RUN pip install pyopenssl --upgrade && pip install requests==2.26.0 urllib3==1.26.0
 # install cron

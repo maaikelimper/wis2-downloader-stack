@@ -1,25 +1,36 @@
-# a script to remove downloaded data older than 1 hour
-
 import os
 import time
 
-# get the current time
-current_time = time.time()
+def clean_directory(directory):
+    # get the current time
+    current_time = time.time()
 
-download_dir = '/downloads'
+    files_removed = 0
+    directories_removed = 0
+    # loop through the files in the directory, including subdirectories
+    for file in os.listdir(directory):
+        # get the full path of the file
+        file_path = os.path.join(directory, file)
 
-# loop through the files in the download directory, including subdirectories
-old_files = []
-for file in os.listdir(download_dir):
-    # get the full path of the file
-    file_path = os.path.join(download_dir, file)
-    # get the time the file was last modified
-    file_time = os.path.getmtime(file_path)
-    # check if the file is older than 1 hour
-    if current_time - file_time > 3600:
-        old_files.append(file_path)
+        # check if the path is a file or a directory
+        if os.path.isfile(file_path):
+            # get the time the file was last modified
+            file_time = os.path.getmtime(file_path)
+            # check if the file is older than 5 minutes
+            if current_time - file_time > 300:
+                os.remove(file_path)
+                files_removed += 1
+        elif os.path.isdir(file_path):
+            # recursively clean the directory
+            clean_directory(file_path)
+            # if the directory is empty, remove it
+            if not os.listdir(file_path):
+                os.rmdir(file_path)
+                directories_removed += 1
+    print(f'CLEANER: removed {files_removed} old files and {directories_removed} empty directories')
 
-print(f"Found {len(old_files)} files to remove")
-for file in old_files:
-    os.remove(file)
-    print(f"Removed {file}")
+# get download dir from environment variable
+download_dir = '/app/downloads'
+
+# start cleaning from the download directory
+clean_directory(download_dir)
