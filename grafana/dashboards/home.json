@@ -80,7 +80,7 @@
           }
         ]
       },
-      "pluginVersion": "9.0.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -123,6 +123,7 @@
       "fieldConfig": {
         "defaults": {
           "mappings": [],
+          "max": 100,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -132,11 +133,11 @@
               },
               {
                 "color": "orange",
-                "value": 50
+                "value": 25
               },
               {
                 "color": "red",
-                "value": 100
+                "value": 50
               }
             ]
           }
@@ -162,7 +163,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "9.0.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -191,6 +192,7 @@
             "mode": "fixed"
           },
           "mappings": [],
+          "max": 1000,
           "min": 0,
           "noValue": "No data",
           "thresholds": {
@@ -228,7 +230,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "9.0.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -261,6 +263,7 @@
           },
           "decimals": 1,
           "mappings": [],
+          "max": 1000,
           "min": 0,
           "noValue": "No data",
           "thresholds": {
@@ -299,7 +302,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "9.0.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -349,7 +352,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 10,
         "x": 14,
         "y": 0
@@ -369,11 +372,11 @@
         },
         "showUnfilled": true,
         "text": {
-          "titleSize": 20,
-          "valueSize": 25
+          "titleSize": 17,
+          "valueSize": 20
         }
       },
-      "pluginVersion": "9.0.3",
+      "pluginVersion": "",
       "targets": [
         {
           "datasource": {
@@ -395,9 +398,10 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P982945308D3682D1"
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
       },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -440,19 +444,20 @@
                 "value": null
               }
             ]
-          }
+          },
+          "unit": "decbytes"
         },
         "overrides": [
           {
             "matcher": {
               "id": "byName",
-              "options": "message received per minute"
+              "options": "Data downloaded per hour"
             },
             "properties": [
               {
                 "id": "color",
                 "value": {
-                  "fixedColor": "light-yellow",
+                  "fixedColor": "light-blue",
                   "mode": "fixed"
                 }
               }
@@ -481,17 +486,18 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P982945308D3682D1"
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "builder",
-          "expr": "sum(rate({container_name=\"wis2-downloader\"} |= `Message received` [1m]))",
-          "legendFormat": "message received per minute",
-          "queryType": "range",
+          "expr": "sum(increase(downloaded_bytes_total[1h]))",
+          "hide": false,
+          "legendFormat": "Data downloaded per hour",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Messages received",
+      "title": "Data downloaded per hour",
       "type": "timeseries"
     },
     {
@@ -500,10 +506,10 @@
         "uid": "P982945308D3682D1"
       },
       "gridPos": {
-        "h": 16,
+        "h": 17,
         "w": 10,
         "x": 14,
-        "y": 6
+        "y": 5
       },
       "id": 6,
       "options": {
@@ -523,7 +529,7 @@
             "uid": "P982945308D3682D1"
           },
           "editorMode": "builder",
-          "expr": "{container_name=\"wis2-downloader\"} != `Queue` != `GET`",
+          "expr": "{container_name=\"wis2-downloader\"} != `Queue` != `GET` != `CLEAN`",
           "queryType": "range",
           "refId": "A"
         }
@@ -534,8 +540,8 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P982945308D3682D1"
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
       },
       "fieldConfig": {
         "defaults": {
@@ -590,30 +596,6 @@
         },
         "overrides": [
           {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "download per minute"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          },
-          {
             "matcher": {
               "id": "byName",
               "options": "download per minute"
@@ -623,6 +605,21 @@
                 "id": "color",
                 "value": {
                   "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Files downloaded per hour"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-green",
                   "mode": "fixed"
                 }
               }
@@ -651,17 +648,17 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P982945308D3682D1"
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "sum(rate({container_name=\"wis2-downloader\"} |= `Download` [1m]))",
-          "legendFormat": "download per minute",
-          "queryType": "range",
+          "expr": "sum(increase(downloaded_files_total[1h]))",
+          "legendFormat": "Files downloaded per hour",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Files downloaded",
+      "title": "Files downloaded per hour",
       "type": "timeseries"
     }
   ],
@@ -673,13 +670,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "wis2-downloader monitoring dashboard",
   "uid": "zB4GjVaIk",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }
