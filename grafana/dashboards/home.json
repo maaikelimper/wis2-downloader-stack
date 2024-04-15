@@ -218,11 +218,12 @@
         "y": 0
       },
       "id": 11,
+      "interval": "1h",
       "options": {
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "last"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
@@ -240,14 +241,15 @@
           "editorMode": "builder",
           "exemplar": false,
           "expr": "sum(increase(downloaded_files_total[1h]))",
-          "format": "table",
+          "format": "time_series",
           "instant": true,
+          "interval": "1h",
           "legendFormat": "{{label_name}}",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Files downloaded per hour",
+      "title": "Files downloaded last hour",
       "type": "gauge"
     },
     {
@@ -279,7 +281,7 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "decbytes"
         },
         "overrides": []
       },
@@ -290,11 +292,12 @@
         "y": 0
       },
       "id": 12,
+      "interval": "1h",
       "options": {
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "last"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
@@ -311,15 +314,16 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum(increase(downloaded_bytes_total[1h])) / 1024 / 1024",
-          "format": "table",
+          "expr": "sum(increase(downloaded_bytes_total[1h]))",
+          "format": "time_series",
           "instant": true,
+          "interval": "1h",
           "legendFormat": "{{label_name}}",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Data downloaded per hour",
+      "title": "Data downloaded last hour",
       "type": "gauge"
     },
     {
@@ -330,10 +334,11 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "light-blue",
+            "fixedColor": "light-green",
             "mode": "fixed"
           },
           "mappings": [],
+          "max": 9997,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -347,25 +352,26 @@
               }
             ]
           },
-          "unit": "decmbytes"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 10,
+        "h": 4,
+        "w": 5,
         "x": 14,
         "y": 0
       },
       "id": 16,
+      "interval": "1h",
       "options": {
         "displayMode": "lcd",
         "minVizHeight": 10,
         "minVizWidth": 0,
-        "orientation": "horizontal",
+        "orientation": "vertical",
         "reduceOptions": {
           "calcs": [
-            "last"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
@@ -385,15 +391,158 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum by(file_type) (increase(downloaded_bytes_total[1h])) / 1024 / 1024",
+          "expr": "sum(increase(downloaded_files_total{file_type=\"bufr\"}[1h]))",
           "format": "time_series",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
+          "instant": true,
+          "interval": "1h",
+          "legendFormat": "BUFR",
+          "range": false,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum(increase(downloaded_files_total{file_type=\"grib\"}[1h]))",
+          "format": "time_series",
+          "hide": false,
+          "instant": true,
+          "interval": "1h",
+          "legendFormat": "GRIB",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(increase(downloaded_files_total{file_type!~\"bufr|grib\"}[1h]))",
+          "format": "time_series",
+          "hide": false,
+          "instant": true,
+          "interval": "1h",
+          "legendFormat": "Other",
+          "range": false,
+          "refId": "C"
         }
       ],
-      "title": "Data downloaded per hour by file-type",
+      "title": "Files downloaded by file-type",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "max": 1000000000,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 19,
+      "interval": "1h",
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "text": {
+          "titleSize": 17,
+          "valueSize": 20
+        }
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum(increase(downloaded_bytes_total{file_type=\"bufr\"}[1h]))",
+          "format": "time_series",
+          "instant": true,
+          "interval": "1h",
+          "legendFormat": "BUFR",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum(increase(downloaded_bytes_total{file_type=\"grib\"}[1h]))",
+          "format": "time_series",
+          "hide": false,
+          "instant": true,
+          "interval": "1h",
+          "legendFormat": "GRIB",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(increase(downloaded_bytes_total{file_type!~\"grib|bufr\"}[1h]))",
+          "format": "time_series",
+          "hide": false,
+          "instant": true,
+          "interval": "1h",
+          "legendFormat": "Other",
+          "range": false,
+          "refId": "C"
+        }
+      ],
+      "title": "Data downloaded by file-type",
       "type": "bargauge"
     },
     {
@@ -462,6 +611,45 @@
                 }
               }
             ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Data downloaded per minute"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Data downloaded per minute"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
@@ -490,14 +678,14 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "builder",
-          "expr": "sum(increase(downloaded_bytes_total[1h]))",
+          "expr": "sum(increase(downloaded_bytes_total[1m]))",
           "hide": false,
-          "legendFormat": "Data downloaded per hour",
+          "legendFormat": "Data downloaded per minute",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Data downloaded per hour",
+      "title": "Data downloaded per minute",
       "type": "timeseries"
     },
     {
@@ -506,10 +694,10 @@
         "uid": "P982945308D3682D1"
       },
       "gridPos": {
-        "h": 17,
+        "h": 18,
         "w": 10,
         "x": 14,
-        "y": 5
+        "y": 4
       },
       "id": 6,
       "options": {
@@ -651,18 +839,18 @@
             "type": "prometheus",
             "uid": "P1809F7CD0C75ACF3"
           },
-          "editorMode": "code",
-          "expr": "sum(increase(downloaded_files_total[1h]))",
-          "legendFormat": "Files downloaded per hour",
+          "editorMode": "builder",
+          "expr": "sum(increase(downloaded_files_total[1m]))",
+          "legendFormat": "Files downloaded per minute",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Files downloaded per hour",
+      "title": "Files downloaded per minute",
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
@@ -677,6 +865,6 @@
   "timezone": "",
   "title": "wis2-downloader monitoring dashboard",
   "uid": "zB4GjVaIk",
-  "version": 2,
+  "version": 5,
   "weekStart": ""
 }
