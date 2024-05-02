@@ -17,7 +17,7 @@ def clean_directory(directory):
             # get the time the file was last modified
             file_time = os.path.getmtime(file_path)
             # check if the file is older than 5 minutes
-            if current_time - file_time > 300:
+            if current_time - file_time > 30:
                 os.remove(file_path)
                 files_removed += 1
         elif os.path.isdir(file_path):

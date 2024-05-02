@@ -9,7 +9,7 @@
     "download_dir": "/app/downloads",
     "flask_host": "wis2-downloader",
     "flask_port": 8080,
-    "download_workers": 100,
+    "download_workers": 16,
     "save_logs": false,
     "log_dir": "logs"
 }

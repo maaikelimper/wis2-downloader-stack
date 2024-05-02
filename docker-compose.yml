@@ -44,6 +44,7 @@ services:
     image: prom/prometheus:v2.30.3
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - '--storage.tsdb.retention.time=10d'
@@ -87,3 +88,4 @@ services:
 
 volumes:
   loki-data:
+  prometheus-data:
